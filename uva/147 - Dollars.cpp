@@ -1,0 +1,84 @@
+//147 - Dollars
+
+#include<set>
+#include<map>
+#include<list>
+#include<iomanip>
+#include<cmath>
+#include<string>
+#include<vector>
+#include<queue>
+#include<stack>
+#include<complex>
+#include<sstream>
+#include<iostream>
+#include<fstream>
+#include<algorithm>
+#include<numeric>
+#include<utility>
+#include<functional>
+#include<stdio.h>
+#include<assert.h>
+#include<memory.h>
+#include<bitset>
+using namespace std;
+
+#define all(v)				((v).begin()), ((v).end())
+#define sz(v)				((int)((v).size()))
+#define clr(v, d)			memset(v, d, sizeof(v))
+#define rep(i, v)		for(int i=0;i<sz(v);++i)
+#define lp(i, n)		for(int i=0;i<(int)(n);++i)
+#define lpi(i, j, n)	for(int i=(j);i<(int)(n);++i)
+#define lpd(i, j, n)	for(int i=(j);i>=(int)(n);--i)
+#define pb					push_back
+#define MP					make_pair
+#define P(x)				cout<<#x<<" = { "<<x<<" }\n"
+typedef long long         ll;
+typedef long double   	  ld;
+typedef vector<int>       vi;
+typedef vector<double>    vd;
+typedef vector< vi >      vvi;
+typedef vector< vd >      vvd;
+typedef vector<string>    vs;
+typedef vector<ll>		  vll;
+
+
+const ll OO = 1e16;
+
+const double EPS = (1e-7);
+int dcmp(double x, double y) {	return fabs(x-y) <= EPS ? 0 : x < y ? -1 : 1;	}
+
+
+void fast(){
+	std::ios_base::sync_with_stdio(0);
+	cin.tie(NULL); cout.tie(NULL);
+}
+int mon;
+int a[] = { 10000, 5000, 2000, 1000, 500, 200, 100, 50, 20, 10, 5 };
+
+ll mem[12][30001];
+ll rec(int i,int n){
+	if (n < 0)return 0;
+	if (n == 0)return 1;
+	if (i == 11)return 0;
+
+	if (mem[i][n] != -1)return mem[i][n];
+
+	ll ret = 0;
+	ret += rec(i, n - a[i]) + rec(i + 1, n);
+
+	return mem[i][n] = ret;
+}
+int main(){
+	fast();
+	int m; int frac; char x;
+	clr(mem, -1);
+	while (cin >> m>>x>>frac&& !(m == 0&&frac == 0)){
+		
+		mon = (m * 100)+ frac;
+		cout << setfill(' ') << setw(3) << m << x << setfill('0') << setw(2) << frac << setfill(' ') <<setw(17) << setiosflags(ios::right) << rec(0, mon) << endl;
+	}
+	
+	return 0;
+}
+//mosta7il_
