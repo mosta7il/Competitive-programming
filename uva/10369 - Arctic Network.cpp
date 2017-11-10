@@ -102,8 +102,6 @@ int main(){
 		
 		
 		 cout << fixed << setprecision(2)<<MST[MST.size() - n].first << endl;
-
-		//if (t)cout << endl;
 	}
 	return 0;
 }
