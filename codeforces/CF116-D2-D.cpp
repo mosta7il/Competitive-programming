@@ -17,9 +17,9 @@ void fast(){
 	std::ios_base::sync_with_stdio(0);
 	cin.tie(NULL); cout.tie(NULL);
 }
-int n, m, cnt, lst;
+int n, m, lst;
 char g[151][151];
-int mem[151][151];
+
 int L[151], R[151];
 int rec(int i, int j){
 
@@ -50,7 +50,6 @@ int main(){
 		bool f = 0;
 		for (int j = 0; j < m; j++){
 			cin >> g[i][j];
-			cnt += (g[i][j] == 'W');
 			if (!f && g[i][j] == 'W'){
 				f = 1;
 				L[i] = j;
