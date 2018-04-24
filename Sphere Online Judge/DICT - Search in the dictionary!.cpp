@@ -19,9 +19,10 @@ void fast(){
 }
 int n, t;
 set<string>s;
+string a[1000 * 25 + 1];
 struct trie{
 	trie *nxt[26];
-	vector<string>cnt;
+	vector<int>cnt;
 	bool end;
 
 	trie(){
@@ -30,7 +31,7 @@ struct trie{
 		end  = 0;
 	}
 
-	void insert(int idx, string s){
+	void insert(int idx, string s , int i){
 		if (idx == s.size()){
 			end = 1;
 			return;
@@ -39,17 +40,17 @@ struct trie{
 		if (nxt[s[idx] - 'a'] == 0){
 			nxt[s[idx] - 'a'] = new trie();
 		}
-		cnt.push_back(s);
-		nxt[s[idx] - 'a']->insert(idx + 1, s);
+		cnt.push_back(i);
+		nxt[s[idx] - 'a']->insert(idx + 1, s , i);
 	}
 
-	vector<string> find_prefix(int idx, string s){
+	vector<int> find_prefix(int idx, string s){
 		if (idx == s.size()){
 			return cnt;
 		}
 
 		if (nxt[s[idx] - 'a'] == 0){
-			return vector<string>(0);
+			return vector<int>(0);
 		}
 		return nxt[s[idx] - 'a']->find_prefix(idx + 1, s);
 	}
@@ -63,21 +64,22 @@ int main(){
 		cin >> ss;
 		s.insert(ss);
 	}
-
+	int id = 0;
 	for (auto i : s){
-		tree->insert(0, i);
+		a[id] = i;
+		tree->insert(0, a[id] , id);
+		id++;
 	}
 	cin >> t;
 	for (int i = 1; i <= t; i++){
 		cin >> ss;
 		cout << "Case " << "#" << i << ":\n";
-		vector<string> res = tree->find_prefix(0, ss);
+		vector<int> res = tree->find_prefix(0, ss);
 		if (res.size() == 0)
 			cout << "No match.\n";
 		else {
-			sort(res.begin(), res.end());
 			for (auto e : res)
-				cout << e << "\n";
+				cout << a[e] << "\n";
 		}
 	}
 	return 0;
