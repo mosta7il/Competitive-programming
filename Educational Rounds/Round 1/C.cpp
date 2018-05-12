@@ -20,15 +20,7 @@ void fast(){
 int n;
 
 vector < pair<long double, int> >pts;
-int get_quad(int x, int y){
-	if (x >= 0 && y >= 0)
-		return 0;
-	if (x >= 0)
-		return 3;
-	if (x < 0 && y >= 0)
-		return 1;
-	return 2;
-}
+
 const long double PI = acos(-1);
 long double get_angle(int x , int y){
 	long double ang = atan2((long double)y*1.0, (long double)x*1.0);
