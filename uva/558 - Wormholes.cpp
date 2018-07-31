@@ -40,7 +40,7 @@ bool ford(){
 
 	for (int i = 0; i < n; i++)
 		dist[i] = OO;
-
+	dist[0] = 0;
 	for (int i = 0; i < n; i++){
 		
 		for (auto &e : v){
