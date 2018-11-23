@@ -1,4 +1,8 @@
 /*
+	- SUM (n % i ) for every i , 1 <= i <= m .
+	= SUM ( n   - floor(n/i) * i )
+	= SUM ( n ) - SUM( floor (n/i) * i )
+	= n * m     - SUM( floor (n/i) * i )
 
 */
 
