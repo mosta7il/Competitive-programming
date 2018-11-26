@@ -1,5 +1,9 @@
 /*
-
+	We can preprocess soultion for K <= sqrt(N) .
+	That would take O ( N * sqrt( N ) ) Time and memory.
+	For K > sqrt(N) , we can just simulate it . Each query would take less than sqrt(N) steps.
+	
+	Total Complexity O ( N * sqrt( N )  + N * sqrt( N ) ) = O ( N * sqrt( N ) )
 */
 
 #define _CRT_SECURE_NO_WARNINGS
