@@ -1,5 +1,5 @@
 /*
-
+	E - V + 2 = F
 */
 
 // Defualt Block
@@ -17,7 +17,7 @@ int dy[] = { 1, -1, 0, 0, -1, 1, 1, -1 };
 #define PI acos(-1.0)
 #define OO 1e9
 #define mod 1e9+7
-#define EPS 1e-9
+#define EPS 1e-8
 #define MLOG 30
 #define MAX 1 * 100 * 1000+5
 
@@ -33,15 +33,15 @@ double DEG_to_RAD(double d) { return d * PI / 180.0; }
 double RAD_to_DEG(double r) { return r * 180.0 / PI; }
 
 struct point {
-	double x, y;  
-	point() { x = y = 0.0; }                      
-	point(double _x, double _y) : x(_x), y(_y) {} 
+	double x, y;
+	point() { x = y = 0.0; }
+	point(double _x, double _y) : x(_x), y(_y) {}
 
-	bool operator < (point other) const { 
-		if (fabs(x - other.x) > EPS)      
-			return x < other.x;          
+	bool operator < (point other) const {
+		if (fabs(x - other.x) > EPS)
+			return x < other.x;
 		return y < other.y;
-	} 
+	}
 
 	bool operator == (point other) const {
 		return (fabs(x - other.x) < EPS && (fabs(y - other.y) < EPS));
@@ -55,6 +55,9 @@ struct point {
 	point operator*(const double a) const {
 		return point(x * a, y * a);
 	}
+	bool operator!=(const point &a) const {
+		return !(a == *this);
+	}
 };
 
 // rotate p by theta degrees CCW w.r.t origin (0, 0)
@@ -65,9 +68,9 @@ point rotate(point p, double theta) {
 }
 
 // distance between p1 and p2
-double dist(point p1, point p2) {   						
+double dist(point p1, point p2) {
 	return hypot(p1.x - p2.x, p1.y - p2.y);
-}           
+}
 
 
 // Lines
@@ -193,24 +196,24 @@ double angle(point a, point o, point b) {  // returns angle aob in rad
 
 // segment - segment intersection
 bool SegmentIntersection(point a1, point a2, point b1, point b2) {
-	double c1 = cross(toVec(a1, a2), toVec(a1, b1) ),
-		   c2 = cross(toVec(a1, a2), toVec(a1, b2)),
-		   c3 = cross(toVec(b1, b2), toVec(b1, a1)),
-		   c4 = cross(toVec(b1, b2), toVec(b1, a2));
-	return (dcmp(c1, 0.0) * dcmp(c2 , 0.0)) < 0 && (dcmp(c3 , 0.0) * dcmp(c4,0.0)) < 0;
+	double c1 = cross(toVec(a1, a2), toVec(a1, b1)),
+		c2 = cross(toVec(a1, a2), toVec(a1, b2)),
+		c3 = cross(toVec(b1, b2), toVec(b1, a1)),
+		c4 = cross(toVec(b1, b2), toVec(b1, a2));
+	return (dcmp(c1, 0.0) * dcmp(c2, 0.0)) < 0 && (dcmp(c3, 0.0) * dcmp(c4, 0.0)) < 0;
 }
 
 // Get intersection point of two seg.
 point getIntersect(point a1, point a2, point b1, point b2) {
-	vec u = toVec(b1 , a1);
+	vec u = toVec(b1, a1);
 	double t = cross(toVec(b1, b2), u) / cross(toVec(a1, a2), toVec(b1, b2));
 	return a1 + (a2 - a1) * t;
 }
 
 // Is point P on segment a1--a2
 bool OnSegment(point P, point a1, point a2) {
-	return dcmp(cross(toVec(P, a1), toVec(P, a2)), 0.0) == 0 
-		&& dcmp(dot(toVec(P, a1), toVec(P, a2) ), 0.0) < 0;
+	return dcmp(cross(toVec(P, a1), toVec(P, a2)), 0.0) == 0
+		&& dcmp(dot(toVec(P, a1), toVec(P, a2)), 0.0) < 0;
 }
 
 // note: to accept collinear points, we have to change the `> 0'
@@ -243,35 +246,34 @@ int main(){
 		cout << "Case " << cas++ << ": There are ";
 		vector< point > p;
 		vector< pair < point, point > >seg;
-			
+
 		for (int i = 0; i < n; i++){
 			int x, y; cin >> x >> y;
 			p.push_back(point(x, y));
 		}
-	
+
 		for (int i = 1; i < n; i++){
 			seg.push_back({ p[i - 1], p[i] });
 		}
-		int ans = 1;
+	
 		for (int i = 2; i < seg.size(); i++){
-			vector< point >w;
 			for (int j = i - 2; j >= 0; j--){
 				if (SegmentIntersection(seg[i].first, seg[i].second, seg[j].first, seg[j].second)){
-					w.push_back(getIntersect(seg[i].first, seg[i].second, seg[j].first, seg[j].second));
-				}
-				else if ((seg[j].first == seg[i].second )){
-					w.push_back(seg[j].first);
-				}
-				else if (seg[j].second == seg[i].second){
-					w.push_back(seg[j].second);
+					p.push_back(getIntersect(seg[i].first, seg[i].second, seg[j].first, seg[j].second));
 				}
 			}
-			sort(w.begin(), w.end());
-			unique(w.begin(), w.end());
-			ans += w.size();
 		}
+		sort(p.begin(), p.end());
+		p.resize(unique(p.begin(), p.end()) - p.begin());
+		int edge = n - 1, ver = p.size();
 
-		cout << ans << " pieces.\n";
+		for (int i = 0; i < seg.size(); i++){
+			for (int j = 0; j < p.size(); j++){
+				if (OnSegment(p[j], seg[i].first, seg[i].second))
+					edge++;
+			}
+		}
+		cout << edge - ver + 2 << " pieces.\n";
 	}
 
 	return 0;
