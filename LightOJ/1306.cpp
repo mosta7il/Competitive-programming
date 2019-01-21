@@ -164,7 +164,7 @@ void fix(ll &a, ll &b, ll &c , ll &x1 , ll &x2 , ll &y1 , ll &y2){
 	}
 }
 int main(){
-	fast();
+	//fast();
 	cnt = 1;
 	cin >> t;
 	while (t--){
