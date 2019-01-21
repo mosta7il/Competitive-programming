@@ -1,6 +1,5 @@
 /*
-  - Get RTE.
-  - Not Fixed yet.
+
 
 */
 
@@ -44,6 +43,16 @@ ll check(ll b, ll c, ll y, ll yy, ll x, ll xx){
 
 // Ax + By = gcd(A , B);
 ll extended_gcd(ll a, ll b, ll & x, ll & y) {
+	if (a < 0){
+		ll g = extended_gcd(-a, b, x, y);
+		x = -x;
+		return g;
+	}
+	if (b < 0){
+		ll g = extended_gcd(a, -b, x, y);
+		y = -y;
+		return g;
+	}
 	if (a == 0) {
 		x = 0;
 		y = 1;
@@ -56,17 +65,34 @@ ll extended_gcd(ll a, ll b, ll & x, ll & y) {
 	return d;
 }
 
+// find one solution
+bool dioph(ll a, ll b, ll c, ll &x, ll &y, ll &g){
+	g = extended_gcd(a, b, x, y);
+
+	if (g && c%g == 0){
+		x *= c / g;
+		y *= c / g;
+		return 1;
+	}
+	return 0;
+}
+
+
 void shift_solution(ll & x, ll & y, ll a, ll b, ll cnt) {
 	x += cnt * b;
 	y -= cnt * a;
 }
 
+// find number of solutions
 ll all_dioph_solutions(ll a, ll b, ll c, ll minx, ll maxx, ll miny, ll maxy) {
 	ll x, y, g;
 	g = extended_gcd(a, b, x, y);
-	if (g && c %g)
-		return 0;
 
+	if (g && c%g == 0){
+		x *= c / g;
+		y *= c / g;
+	}
+	if (g&&c%g)return 0;
 	if (!a && b){
 		return  check(b, c, miny, maxy, minx, maxx);
 	}
@@ -79,7 +105,6 @@ ll all_dioph_solutions(ll a, ll b, ll c, ll minx, ll maxx, ll miny, ll maxy) {
 	if (!a && !b && !c){
 		return (1ll * maxx - minx + 1) * (maxy - miny + 1);
 	}
-
 	a /= g;  b /= g;
 
 	ll sign_a = a>0 ? +1 : -1;
@@ -152,7 +177,7 @@ int main(){
 		fix(a, b, c, x1, x2, y1, y2);
 		
 		ll ans = all_dioph_solutions(a, b, c, x1, x2, y1, y2);
-		cout << ans << endl;
+		cout <<ans << endl;
 	}
 	return 0;
 } 
