@@ -1,6 +1,11 @@
 /*
-
-
+    Sum of all choclate Z 
+     Z = x + (x / p) + (x / p^2) + .... + (x / p^n-1)
+     Z =  x ( 1 + (1 / p) + (1 / p^2) + .... + (1 / p^n-1)
+     - We can easily compute the sum of the geometric Series.
+     - X should be minimum and divisable by all p , p^2 , ... ,and p^n-1
+	then X = p^n-1.
+ 
 */
 
 #define _CRT_SECURE_NO_WARNINGS
