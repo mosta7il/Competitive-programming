@@ -1,6 +1,16 @@
 /*
-
-
+	- Transform Equation from Ax + By + C = 0  into Ax + By = C.
+	- we can get one solution using extended eculidean iff gcd(A,B) | C.
+	- to get all soultions :
+		- compute lx1 , rx1 where :
+		  lx1 : x of a solution (x , y) where x >= min_x and x is minimum.
+		  rx1 : x of a solution (x , y) where x <= max_x and x is maximum.
+		  
+		- compute lx2 , rx2 where :
+		  lx2 : x of a solution (x , y) where y >= min_y and y is minimum.
+		  rx2 : x of a soultion (x , y) where y <= max_y and y is maximum.
+		
+		 - answer is the intersection between [lx1 - rx1] and [lx2 - rx2].
 */
 
 #define _CRT_SECURE_NO_WARNINGS
@@ -19,7 +29,7 @@ int dy[] = { 1, -1, 0, 0, -1, 1, 1, -1 };
 #define EPS 1e-12
 #define MLOG 20
 #define MAX  3 * 100  * 1000+5
-const ll mod = 1e9+7;
+const ll mod = 1e9 + 7;
 
 ll dcmp(long double x, long double y){
 	return fabs(x - y) <= EPS ? 0 : x < y ? -1 : 1;
@@ -65,18 +75,6 @@ ll extended_gcd(ll a, ll b, ll & x, ll & y) {
 	return d;
 }
 
-// find one solution
-bool dioph(ll a, ll b, ll c, ll &x, ll &y, ll &g){
-	g = extended_gcd(a, b, x, y);
-
-	if (g && c%g == 0){
-		x *= c / g;
-		y *= c / g;
-		return 1;
-	}
-	return 0;
-}
-
 
 void shift_solution(ll & x, ll & y, ll a, ll b, ll cnt) {
 	x += cnt * b;
@@ -92,19 +90,16 @@ ll all_dioph_solutions(ll a, ll b, ll c, ll minx, ll maxx, ll miny, ll maxy) {
 		x *= c / g;
 		y *= c / g;
 	}
-	if (g&&c%g)return 0;
-	if (!a && b){
-		return  check(b, c, miny, maxy, minx, maxx);
-	}
-	if (a && !b){
-		return check(a, c, minx, maxx, miny, maxy);
-	}
-	if (!a && !b && c){
-		return 0;
-	}
-	if (!a && !b && !c){
-		return (1ll * maxx - minx + 1) * (maxy - miny + 1);
-	}
+	if (g && c%g)			return 0;
+
+	if (!a && b)			return  check(b, c, miny, maxy, minx, maxx);
+
+	if (a && !b)		    return check(a, c, minx, maxx, miny, maxy);
+
+	if (!a && !b && c)		return 0;
+
+	if (!a && !b && !c)		return (1ll * maxx - minx + 1) * (maxy - miny + 1);
+
 	a /= g;  b /= g;
 
 	ll sign_a = a>0 ? +1 : -1;
@@ -118,8 +113,6 @@ ll all_dioph_solutions(ll a, ll b, ll c, ll minx, ll maxx, ll miny, ll maxy) {
 	ll lx1 = x;
 
 	shift_solution(x, y, a, b, (maxx - x) / b);
-	if (x > maxx)
-		shift_solution(x, y, a, b, -sign_b);
 	ll rx1 = x;
 
 	shift_solution(x, y, a, b, -(miny - y) / a);
@@ -130,12 +123,11 @@ ll all_dioph_solutions(ll a, ll b, ll c, ll minx, ll maxx, ll miny, ll maxy) {
 	ll lx2 = x;
 
 	shift_solution(x, y, a, b, -(maxy - y) / a);
-	if (y > maxy)
-		shift_solution(x, y, a, b, sign_a);
 	ll rx2 = x;
 
 	if (lx2 > rx2)
 		swap(lx2, rx2);
+
 	ll lx = max(lx1, lx2);
 	ll rx = min(rx1, rx2);
 
@@ -146,25 +138,8 @@ ll all_dioph_solutions(ll a, ll b, ll c, ll minx, ll maxx, ll miny, ll maxy) {
 ll t, cnt;
 
 
-void fix(ll &a, ll &b, ll &c , ll &x1 , ll &x2 , ll &y1 , ll &y2){
-	c = -c;
-	if (a<0)
-	{
-		a = -a;
-		swap(x1, x2);
-		x1 = -x1;
-		x2 = -x2;
-	}
-	if (b<0)
-	{
-		b = -b;
-		swap(y1, y2);
-		y1 = -y1;
-		y2 = -y2;
-	}
-}
 int main(){
-	//fast();
+	fast();
 	cnt = 1;
 	cin >> t;
 	while (t--){
@@ -173,11 +148,10 @@ int main(){
 		cin >> a >> b >> c;
 		cin >> x1 >> x2;
 		cin >> y1 >> y2;
+		c = -c;
 
-		fix(a, b, c, x1, x2, y1, y2);
-		
 		ll ans = all_dioph_solutions(a, b, c, x1, x2, y1, y2);
-		cout <<ans << endl;
+		cout << ans << endl;
 	}
 	return 0;
-} 
+}
