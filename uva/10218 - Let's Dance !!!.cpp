@@ -8,7 +8,7 @@
 		probability of choose exactly zero men + 
 		probability of choose exactly 2 men + ..... and so far as the number of men <= C.
 
-	probability of choose exactly X men = ( C choose X ) * ( p ^ X ) * ( q ^ (C-X) ).
+	probability of choose exactly X men out of C choices = ( C choose X ) * ( p ^ X ) * ( q ^ (C-X) ).
 
 	
 */
