@@ -1,70 +1,72 @@
+/*
+
+
+*/
+
 #define _CRT_SECURE_NO_WARNINGS
-#include<bits/stdc++.h>
-
-
+#include <bits/stdc++.h>
+#include<unordered_map>
 using namespace std;
-
-typedef complex<double> Point;
-
-
-const long long OO = 1e9;
-const long long mod = 1e9 + 7;
-const long double EPS = (1e-18);
-int dcmp(long double x, long double y) { return fabs(x - y) <= EPS ? 0 : x < y ? -1 : 1; }
 
 int dx[] = { 0, 0, 1, -1, 1, 1, -1, -1 };
 int dy[] = { 1, -1, 0, 0, -1, 1, 1, -1 };
 
+#define endl '\n'
+#define ld long double
+#define ll long long
+#define PI acos(-1.0)
+#define OO 1e9
+#define EPS 1e-12
+#define MLOG 20
+#define MAX 1 * 100 * 1000+5
+const int mod = 998244353;
+
+int dcmp(long double x, long double y){
+	return fabs(x - y) <= EPS ? 0 : x < y ? -1 : 1;
+}
 
 void fast(){
 #ifndef ONLINE_JUDGE
-	freopen("F:\\solving\\input.txt", "r", stdin);
-	freopen("F:\\solving\\output.txt", "w", stdout);
-
+	freopen("E:\\Competitve\\solving\\input.txt", "r", stdin);
+	freopen("E:\\Competitve\\solving\\output.txt", "w", stdout);
 #endif
+
 	std::ios_base::sync_with_stdio(0);
 	cin.tie(NULL); cout.tie(NULL);
-
 }
-const long double PI = 3.1415926535897932384626433832795028841971693993751;
-const long long MAX = 1 * 100 * 1000 + 5;
 int n, m;
 int a[MAX], b[MAX];
 
-bool fun(long long md){
+bool valid(ll md){
 
-	set< pair< long long, long long > > p;
-	for (int i = 0; i < m; i++){
-		p.insert({ b[i] - md, b[i] + md });
+	int idx = 0, i = 0;
+	while(idx<m && i <n){
+		if (a[i] >= b[idx] - md && a[i] <= b[idx] + md)
+			i++;
+		else if (a[i] >= b[idx] - md)
+			idx++;
+		else	return 0;
 	}
-	
-	for (int i = 0; i < n; i++){
-		while (p.size() >0 &&(*(p.begin())).second < a[i])
-			p.erase(p.begin());
-		if (p.size() == 0)
-			return 0;
-		if (a[i] < (*(p.begin())).first)
-			return 0;
-	}
-	return 1;
+	return (i == n);
+
 }
 
-int main() {
+int main(){
 	fast();
-
 	cin >> n >> m;
+
 	for (int i = 0; i < n; i++)
 		cin >> a[i];
-	for (int i = 0; i < m; i++){
+	for (int i = 0; i < m; i++)
 		cin >> b[i];
-	}
 
-	long long lo = 0, hi = 2e9, ans = -1;
+	ll lo = 0, hi = 2e9, ans = 1e18;
 	while (lo <= hi){
-		long long md = lo + hi >> 1;
-		if (fun(md)){
-			hi = md - 1;
+		ll md = lo + (hi - lo) / 2;
+
+		if (valid(md)){
 			ans = md;
+			hi = md - 1;
 		}
 		else lo = md + 1;
 	}
